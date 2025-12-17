@@ -1,0 +1,65 @@
+# PROJECT SPECIFICATION: High-Quality AR Implementation (Article.com Style)
+
+## 1. Project Overview
+We are implementing a professional AR "View in Your Space" feature for a Shopify theme.
+* **Reference Benchmark:** [Article.com](https://www.article.com/product/24926/sanders-85-5-reversible-sectional-sandstone-wool-boucle)
+* **Core Technology:** Google `<model-viewer>` (Standard for Native AR).
+* **Goal:** Seamless AR experience (Native Quick Look on iOS / Scene Viewer on Android) without external redirects.
+
+## 2. STRICT "ZERO-WASTE" RULES
+* **NO** `index.html`, `demo.html`, `server.js`.
+* **NO** mock data or local testing logic.
+* **ONLY** write production-ready Shopify Liquid, CSS, and JS.
+
+## 3. Implementation Requirements
+
+### A. Desired Behavior (UX)
+Based on the client's request:
+1.  **iOS:** Trigger "AR Quick Look" immediately upon clicking the button.
+2.  **Android:** Trigger "Scene Viewer" immediately.
+3.  **Desktop:** Show the 3D model interaction.
+4.  **UI Style:** A professional "View in AR" button overlaid on the 3D viewer (similar to Article.com).
+
+### B. Technical Tasks
+
+#### Task 1: Load Dependencies
+**File:** `layout/theme.liquid`
+* Inject the `<model-viewer>` script into the `<head>`.
+* Use the CDN: `https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js`.
+
+#### Task 2: Create the AR Logic Snippet
+**File:** `snippets/ar-model-viewer.liquid`
+* **Input:** Accept `product` as a parameter.
+* **Logic:**
+    * Loop through `product.media`.
+    * Identify the 3D Model (`media_type == 'model'`).
+    * **CRITICAL:** Extract both `.glb` URL (for `src`) and `.usdz` URL (for `ios-src`). *Shopify creates both formats; ensure the Liquid code finds both.*
+* **Component Configuration (`<model-viewer>`):**
+    * `ar`: Enabled.
+    * `ar-modes="webxr scene-viewer quick-look"`: This ensures the "Article.com" behavior.
+    * `camera-controls`: Enabled.
+    * `poster`: Use the preview image.
+    * `shadow-intensity="1"`.
+    * `reveal="auto"`.
+* **The Button:**
+    * Inside the viewer, add a `<button slot="ar-button" id="ar-trigger">`.
+    * Text: "View in your space".
+    * Icon: Add a simple SVG cube icon next to the text if possible.
+
+#### Task 3: Professional Styling (UX Priority)
+**File:** `assets/ar-styles.css`
+* **Container:** 100% width, height ~500px (Desktop) / ~350px (Mobile).
+* **Button Style (Reference Article.com):**
+    * Position: Absolute (bottom-center or bottom-right).
+    * Background: White (or Brand Color).
+    * Shape: Rounded pill shape (border-radius: 30px).
+    * Shadow: Soft box-shadow for depth.
+    * Typography: Bold, clean sans-serif.
+    * Hover effect: Slight transform/scale.
+
+#### Task 4: Integration Instruction
+**File:** `sections/main-product.liquid` (Instructions only)
+* Provide a comment block or instruction on where to paste `{% render 'ar-model-viewer', product: product %}` to replace the default product media gallery for 3D models.
+
+## 4. Execution
+Start immediately. Generate code for **Task 1**, **Task 2**, and **Task 3**.
