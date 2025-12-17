@@ -1,4 +1,36 @@
 {% comment %} section-main-product.css load in theme.liquid {% endcomment %}
+
+{% comment %}
+  ============================================================================
+  AR MODEL VIEWER INTEGRATION
+  ============================================================================
+  
+  To display the AR "View in Your Space" feature for products with 3D models,
+  add the following snippet where you want the AR viewer to appear:
+  
+    {% render 'ar-model-viewer', product: product %}
+  
+  PLACEMENT OPTIONS:
+  
+  1. REPLACE the default media gallery (recommended for dedicated AR products):
+     Find the product__media-wrapper div and replace with the ar-model-viewer snippet.
+  
+  2. ADD alongside existing gallery (show AR below or above gallery):
+     Insert the snippet before or after the product__media-wrapper div.
+  
+  3. CONDITIONAL display (show AR viewer only when 3D model exists):
+     {%- assign has_3d_model = product.media | where: 'media_type', 'model' | first -%}
+     {%- if has_3d_model -%}
+       {% render 'ar-model-viewer', product: product %}
+     {%- endif -%}
+  
+  REQUIREMENTS:
+  - Product must have 3D model media uploaded in Shopify admin
+  - model-viewer script is already loaded in theme.liquid
+  - ar-styles.css is automatically loaded by the snippet
+  
+  ============================================================================
+{% endcomment %}
 {{ 'component-accordion.css' | asset_url | stylesheet_tag }}
 {{ 'component-badge.css' | asset_url | stylesheet_tag }}
 {{ 'component-price.css' | asset_url | stylesheet_tag }}

@@ -1,0 +1,132 @@
+{%- comment -%}
+  AR Model Viewer Snippet
+  Renders a professional AR "View in Your Space" experience using Google's model-viewer.
+  
+  Usage: {% render 'ar-model-viewer', product: product %}
+  
+  Features:
+  - iOS: Native AR Quick Look via Shopify's signed URLs
+  - Android: Scene Viewer AR experience
+  - Desktop: Interactive 3D model with camera controls
+{%- endcomment -%}
+
+{%- assign model_media = nil -%}
+{%- assign glb_url = nil -%}
+{%- assign usdz_url = nil -%}
+{%- assign poster_url = nil -%}
+
+{%- for media in product.media -%}
+  {%- if media.media_type == 'model' -%}
+    {%- assign model_media = media -%}
+    {%- assign poster_url = media.preview_image | image_url: width: 1200 -%}
+    
+    {%- for source in media.sources -%}
+      {%- if source.format == 'glb' -%}
+        {%- assign glb_url = source.url -%}
+      {%- elsif source.format == 'usdz' -%}
+        {%- assign usdz_url = source.url -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- break -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if model_media != nil and glb_url != nil -%}
+  {{ 'ar-styles.css' | asset_url | stylesheet_tag }}
+  
+  <div class="ar-viewer-container" id="ar-viewer-{{ product.id }}">
+    <model-viewer
+      id="model-viewer-{{ product.id }}"
+      class="ar-model-viewer"
+      src="{{ glb_url }}"
+      {%- if usdz_url != nil -%}
+        ios-src="{{ usdz_url }}"
+      {%- endif -%}
+      poster="{{ poster_url }}"
+      alt="{{ product.title | escape }} - 3D Model"
+      ar
+      ar-modes="webxr scene-viewer quick-look"
+      camera-controls
+      touch-action="pan-y"
+      shadow-intensity="1"
+      shadow-softness="1"
+      exposure="1"
+      environment-image="neutral"
+      reveal="auto"
+      auto-rotate-delay="3000"
+      interaction-prompt="auto"
+      interaction-prompt-style="basic"
+      data-shopify-model3d-id="{{ model_media.id }}"
+      data-shopify-model3d-title="{{ product.title | escape }}"
+      data-shopify-model3d-type="model"
+      data-shopify-feature="1.12"
+    >
+      <button 
+        slot="ar-button" 
+        class="ar-button" 
+        id="ar-trigger-{{ product.id }}"
+        data-shopify-xr
+        data-shopify-model3d-id="{{ model_media.id }}"
+        data-shopify-title="{{ product.title | escape }}"
+        data-shopify-xr-hidden
+      >
+        <svg class="ar-button__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+          <line x1="12" y1="22.08" x2="12" y2="12"></line>
+        </svg>
+        <span class="ar-button__text">{{ 'products.product.view_in_ar' | t | default: 'View in your space' }}</span>
+      </button>
+      
+      <div class="ar-loading" slot="poster">
+        <div class="ar-loading__spinner"></div>
+        <span class="ar-loading__text">{{ 'products.product.loading_model' | t | default: 'Loading 3D model...' }}</span>
+      </div>
+    </model-viewer>
+    
+    {%- comment -%}
+      Fallback Quick Look button for iOS devices
+      This provides direct access to AR Quick Look when model-viewer's AR isn't available
+    {%- endcomment -%}
+    {%- if usdz_url != nil -%}
+      <a
+        rel="ar"
+        href="{{ usdz_url }}"
+        class="ar-quick-look-fallback"
+        id="quick-look-{{ product.id }}"
+        data-shopify-xr
+        data-shopify-model3d-id="{{ model_media.id }}"
+        data-shopify-title="{{ product.title | escape }}"
+        hidden
+      >
+        <img src="{{ poster_url }}" alt="{{ product.title | escape }}">
+      </a>
+    {%- endif -%}
+  </div>
+  
+  <script>
+    (function() {
+      const modelViewer = document.getElementById('model-viewer-{{ product.id }}');
+      const quickLookFallback = document.getElementById('quick-look-{{ product.id }}');
+      
+      if (modelViewer) {
+        modelViewer.addEventListener('ar-status', function(event) {
+          if (event.detail.status === 'not-presenting') {
+            console.log('AR session ended');
+          }
+        });
+        
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        if (isIOS && quickLookFallback && !modelViewer.canActivateAR) {
+          const arButton = document.getElementById('ar-trigger-{{ product.id }}');
+          if (arButton) {
+            arButton.addEventListener('click', function(e) {
+              e.preventDefault();
+              quickLookFallback.click();
+            });
+          }
+        }
+      }
+    })();
+  </script>
+{%- endif -%}
