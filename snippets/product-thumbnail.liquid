@@ -50,7 +50,7 @@
           render 'icon-play'
         when 'model'
           render 'icon-3d-model'
-				else
+                                else
           render 'icon-magnify-plus'
       endcase
     -%}
@@ -127,16 +127,20 @@
   {%- if media.media_type == 'model' -%}
     </product-model>
     <button
-      class="button button--full-width product__xr-button focus-inset"
+      class="ar-overlay-button focus-inset"
       type="button"
-      aria-label="{{ 'products.product.xr_button_label' | t }}"
+      aria-label="{{ 'products.product.xr_button_label' | t | default: 'View in your space' }}"
       data-shopify-xr
       data-shopify-model3d-id="{{ media.id }}"
-      data-shopify-title="title"
+      data-shopify-title="{{ product.title | escape }}"
       data-shopify-xr-hidden
     >
-      {% render 'icon-3d-model' %}
-      {{ 'products.product.xr_button' | t }}
+      <svg class="ar-overlay-button__icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+      </svg>
+      <span class="ar-overlay-button__text">{{ 'products.product.xr_button' | t | default: 'View in your space' }}</span>
     </button>
   {%- else -%}
     </deferred-media>

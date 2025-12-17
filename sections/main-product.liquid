@@ -65,6 +65,7 @@
 {%- assign first_3d_model = product.media | where: 'media_type', 'model' | first -%}
 {%- if first_3d_model -%}
   {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
+  {{ 'ar-styles.css' | asset_url | stylesheet_tag }}
   <link
     id="ModelViewerStyle"
     rel="stylesheet"
@@ -414,14 +415,6 @@
                 </div>
               {%- endif -%}
             </div>
-            
-            {%- comment -%} AR Model Viewer - Shows when product has 3D model {%- endcomment -%}
-            {%- assign has_3d_model = product.media | where: 'media_type', 'model' | first -%}
-            {%- if has_3d_model -%}
-              <div class="product__ar-viewer-wrapper">
-                {% render 'ar-model-viewer', product: product %}
-              </div>
-            {%- endif -%}
           </div>
         {% else %}
           <div class="product__media-wrapper">
