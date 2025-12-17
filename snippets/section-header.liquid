@@ -1,0 +1,31 @@
+{% comment %}
+  Usage:
+  {% render 'section-header',
+    section_heading: section.settings.section_heading,
+    button_label: section.settings.section_button_label,
+    button_link: section.settings.section_button_link,
+    button_style: section.settings.section_button_style,
+    large_margin: boolean (optional)
+   %}
+{% endcomment %}
+
+{%- if section_heading != blank or button_label != blank -%}
+  <div class="section-header {% if large_margin %}section-header--large_margin{% endif %}">
+    <div class="section-header__wrapper {% if section_heading == blank %}section-header__wrapper--end{% endif %}">
+      {%- if section_heading != blank -%}
+        <h3 class="section-header__title {{ section.settings.section_heading_size }}">
+          {{ section_heading }}
+        </h3>
+      {% endif %}
+      {% if button_label != blank %}
+        {% render 'button', 
+          btn_label: button_label, 
+          btn_link: button_link, 
+          btn_size: 'small',
+          btn_style: button_style,
+          add_classes: 'section-header__button focus-inset'
+        %}
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}

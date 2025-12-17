@@ -1,0 +1,100 @@
+.collapsible-content--border-top {
+  border-top: 0.1rem solid rgba(var(--color-border));
+}
+.collapsible-content--border-bottom {
+  border-bottom: 0.1rem solid rgba(var(--color-border));
+}
+.collapsible-content__wrapper {
+  width: 100%;
+}
+@media screen and (min-width: 990px) {
+  .collapsible-content__wrapper {
+    max-width: 106.2rem;
+    margin: 0 auto;
+  }
+}
+.collapsible-content__item {
+  border-bottom: 0.1rem solid rgba(var(--color-border));
+  transition: opacity var(--duration-default);
+}
+@media screen and (min-width: 1200px) {
+  .collapsible-content__item--opacity {
+    opacity: 0.5;
+  }
+}
+.collapsible-content__item:first-child {
+  border-top: 0.1rem solid rgba(var(--color-border));
+}
+.collapsible-content__toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.6rem;
+  padding: 2rem 0 1rem;
+  cursor: pointer;
+}
+.collapsible-content__toggle-group {
+  display: flex;
+  align-items: center;
+  text-align: left;
+}
+.collapsible-content__toggle:focus, .collapsible-content__toggle:focus-visible, .collapsible-content__toggle:focus-within {
+  outline-offset: -0.2rem;
+}
+.collapsible-content__question {
+  margin: 0;
+  transition: var(--duration-default);
+}
+.collapsible-content__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: rgb(var(--color-foreground-secondary));
+}
+.collapsible-content__icon svg {
+  width: 3rem;
+  height: 3rem;
+  transition: transform var(--duration-default);
+}
+.active .collapsible-content__icon svg {
+  transform: rotate(-180deg);
+}
+.no-js .collapsible-content__icon svg {
+  transform: rotate(-180deg);
+}
+@media screen and (min-width: 990px) {
+  .collapsible-content__icon svg {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+.collapsible-content__answer {
+  display: none;
+  padding: 0;
+  padding-bottom: 2rem;
+}
+.collapsible-content__answer-inner {
+  max-width: 64rem;
+  font-size: calc(var(--font-body-scale) * 1rem);
+  color: rgb(var(--color-foreground-secondary));
+}
+@media screen and (min-width: 1360px) {
+  .collapsible-content__answer-inner {
+    font-size: calc(var(--font-body-scale) * 1.2rem);
+  }
+}
+.collapsible-content__answer-inner p {
+  margin: 0;
+  color: rgb(var(--color-foreground-secondary));
+}
+.no-js .collapsible-content__answer {
+  display: block;
+}
+.collapsible-content .section-header__title {
+  font-family: var(--font-heading-family);
+  font-style: var(--font-heading-style);
+  font-weight: var(--font-heading-weight);
+}

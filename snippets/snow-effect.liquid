@@ -1,0 +1,143 @@
+<style>
+  .snowflake {
+    position: fixed;
+    top: -10%;
+    z-index: 9999;
+    pointer-events: none;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    animation-timing-function: linear;
+    transition: opacity 1.5s linear; 
+  }
+
+  .snowflake.fading-out {
+    opacity: 0;
+  }
+
+  .snowflake.regular-flake {
+    color: #FFFFFF; 
+    text-shadow: 0px 1px 4px rgba(0, 0, 0, 0.4); 
+    
+    /* --- FIX MÀU XANH: Ép về trắng đen và dùng font thường --- */
+    filter: grayscale(100%) brightness(500%);
+    font-family: Arial, sans-serif;
+  }
+  
+  .snowflake.gold {
+    color: #FFD700; 
+    text-shadow: 0 0 8px #DAA520;
+    /* Không dùng filter ở đây để giữ màu vàng */
+  }
+
+  .snowflake.decoration {
+    text-shadow: none;
+  }
+
+  /* --- Animations --- */
+  @-webkit-keyframes fall {
+    100% { -webkit-transform: translate(100px, 110vh) rotate(360deg); opacity: 0.5; }
+  }
+  @keyframes fall {
+    100% { transform: translate(100px, 110vh) rotate(360deg); opacity: 0.5; }
+  }
+
+  @-webkit-keyframes fall-2 {
+    100% { -webkit-transform: translate(-100px, 110vh) rotate(-360deg); opacity: 0.5; }
+  }
+  @keyframes fall-2 {
+    100% { transform: translate(-100px, 110vh) rotate(-360deg); opacity: 0.5; }
+  }
+
+  @-webkit-keyframes sparkle {
+    0%, 20%, 100% { text-shadow: 0 0 5px rgba(0,0,0,0.3); }
+    10% { text-shadow: 0 0 15px #fff, 0 0 25px #fff; }
+  }
+  @keyframes sparkle {
+    0%, 20%, 100% { text-shadow: 0 0 5px rgba(0,0,0,0.3); }
+    10% { text-shadow: 0 0 15px #fff, 0 0 25px #fff; }
+  }
+</style>
+
+<div id="snow-container" aria-hidden="true"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const snowContainer = document.getElementById('snow-container');
+    if (!snowContainer) return;
+
+    snowContainer.innerHTML = ''; // Clear on reload
+
+    const createSnowflake = () => {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+
+      // Randomize Fall Animation
+      const fallDuration = `${Math.random() * 12 + 8}s`; // 8s to 20s
+      const fallDelay = `${Math.random() * -12}s`;
+      const fallAnimationName = Math.random() > 0.5 ? 'fall' : 'fall-2';
+      let animationStyle = `${fallAnimationName} ${fallDuration} ${fallDelay} linear infinite`;
+      
+      const itemType = Math.random();
+      const isMobile = window.innerWidth <= 768;
+
+      if (itemType < 0.1) { // 10% chance for a Gold Star
+        snowflake.classList.add('gold');
+        snowflake.innerHTML = '&#10022;';
+        if (isMobile) {
+          snowflake.style.fontSize = `${Math.random() * 5 + 5}px`;
+        } else {
+          snowflake.style.fontSize = `${Math.random() * 10 + 10}px`;
+        }
+      } else { // 90% chance for a regular snowflake
+        snowflake.classList.add('regular-flake');
+        
+        // --- FIX JS: Thêm &#xFE0E; để chặn Emoji màu ---
+        const flakeType = Math.random() > 0.5 ? '&#10052;&#xFE0E;' : '&#10053;&#xFE0E;';
+        snowflake.innerHTML = flakeType;
+        
+        if (isMobile) {
+          snowflake.style.fontSize = `${Math.random() * 8 + 6}px`;
+        } else {
+          snowflake.style.fontSize = `${Math.random() * 15 + 10}px`;
+        }
+        
+        if (Math.random() < 0.2) {
+          const sparkleDuration = `${Math.random() * 4 + 3}s`;
+          const sparkleDelay = `${Math.random() * 3}s`;
+          animationStyle += `, sparkle ${sparkleDuration} ${sparkleDelay} linear infinite`;
+        }
+      }
+
+      snowflake.style.left = `${Math.random() * 100}vw`;
+      snowflake.style.animation = animationStyle;
+
+      snowContainer.appendChild(snowflake);
+
+      // --- Individual Fade Out Logic ---
+      const lifetime = (Math.random() * 4000) + 6000;
+      
+      setTimeout(() => {
+        snowflake.classList.add('fading-out');
+      }, lifetime);
+
+      setTimeout(() => {
+        snowflake.remove();
+      }, lifetime + 1500);
+    };
+
+    // --- LOGIC GỐC: 100 flakes và clear sau 12s ---
+    const snowflakeCount = 100; 
+    for (let i = 0; i < snowflakeCount; i++) {
+      createSnowflake();
+    }
+
+    // A final cleanup to ensure the container is empty after all flakes should be gone.
+    setTimeout(() => {
+      if (snowContainer) {
+        snowContainer.innerHTML = '';
+      }
+    }, 12000); // Max lifetime (10s) + fade (1.5s) + buffer
+
+  });
+</script>

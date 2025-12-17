@@ -1,0 +1,347 @@
+@media screen and (max-width: calc(990px - 1px)) {
+  .product-slideshow__container {
+    padding: 0;
+  }
+}
+
+.product-slideshow-slide {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  height: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+  max-height: 100%;
+  pointer-events: none;
+  background: unset;
+}
+.product-slideshow__container .product-slideshow-slide {
+  overflow: hidden;
+  border-radius: 0;
+}
+@media screen and (min-width: 990px) {
+  .product-slideshow__container .product-slideshow-slide {
+    border-radius: var(--border-radius-main);
+  }
+}
+.product-slideshow-slide::after {
+  content: "";
+  display: block;
+  width: 0;
+  padding-bottom: calc(100% / (var(--aspect-ratio)));
+}
+.product-slideshow-slide.adapt::after {
+  content: "";
+  display: block;
+  width: 0;
+  padding-bottom: calc(100% / (var(--aspect-ratio)));
+}
+.product-slideshow-slide.large::after {
+  content: "";
+  display: block;
+  width: 0;
+  padding-bottom: calc(100vh - var(--header-height));
+}
+.product-slideshow-slide__container {
+  max-width: 100%;
+  min-height: 100%;
+  display: flex;
+}
+.product-slideshow__container .product-slideshow-slide__container {
+  min-width: 100%;
+}
+.product-slideshow-slide__inner {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+.product-slideshow-slide__inner.section-full-screen {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.product-slideshow-media {
+  position: relative;
+  z-index: 1;
+}
+.product-slideshow-media__swiper-slide {
+  pointer-events: all;
+  width: 100%;
+  height: auto;
+}
+.product-slideshow-media__swiper-slide .product-item-plug {
+  width: 31.3rem;
+  max-width: 100%;
+  height: var(--product-card-height);
+  min-height: var(--product-card-height);
+}
+.product-slideshow-media__swiper-slide.swiper-slide-active [data-animate] {
+  opacity: 1;
+  transform: none;
+}
+.product-slideshow-media__container {
+  min-height: 100%;
+  display: flex;
+  box-sizing: border-box;
+}
+.product-slideshow-media__inner {
+  position: relative;
+  z-index: 3;
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5.6rem;
+  padding: 3rem 2rem;
+  overflow: hidden;
+}
+@media screen and (min-width: 990px) {
+  .product-slideshow-media__inner {
+    padding: 4rem;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+.section-full-screen .product-slideshow-media__inner {
+  padding-left: 0;
+  padding-right: 0;
+}
+.product-slideshow-media__content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  text-align: left;
+  gap: 2.4rem;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  transition: opacity var(--duration-default);
+  background: transparent;
+  transition: opacity var(--duration-default), visibility var(--duration-default);
+}
+@media screen and (min-width: 990px) {
+  .product-slideshow-media__content {
+    gap: 3.2rem;
+  }
+}
+.product-slideshow-media__subheading {
+  margin-bottom: auto;
+  text-align: left;
+}
+@media screen and (min-width: 750px) {
+  .product-slideshow-media__subheading {
+    max-width: 46rem;
+  }
+}
+@media screen and (min-width: 990px) {
+  .product-slideshow-media__subheading {
+    max-width: 55rem;
+  }
+}
+@media screen and (min-width: 1360px) {
+  .product-slideshow-media__subheading {
+    max-width: 65rem;
+  }
+}
+.product-slideshow-media__title {
+  margin: 0;
+  overflow: hidden;
+}
+@media screen and (min-width: 750px) {
+  .product-slideshow-media__title {
+    max-width: 48rem;
+  }
+}
+@media screen and (min-width: 990px) {
+  .product-slideshow-media__title {
+    max-width: 55rem;
+  }
+  .product-slideshow-media__title.h1 {
+    max-width: 60rem;
+  }
+}
+@media screen and (min-width: 1360px) {
+  .product-slideshow-media__title {
+    max-width: 65rem;
+  }
+}
+.product-slideshow-media__desc {
+  font-size: calc(var(--font-body-scale) * 1rem);
+  color: rgb(var(--color-foreground));
+  overflow: hidden;
+}
+@media screen and (min-width: 1200px) {
+  .product-slideshow-media__desc {
+    max-width: 50rem;
+    font-size: calc(var(--font-body-scale) * 1.3333333333rem);
+  }
+}
+.product-slideshow-media__desc p {
+  margin: 0;
+  color: rgb(var(--color-foreground));
+}
+.product-slideshow-media__buttons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 2.4rem;
+}
+@media screen and (min-width: 750px) {
+  .product-slideshow-media__buttons {
+    max-width: 65rem;
+  }
+}
+.swiper-slide-active .product-slideshow-media__buttons {
+  pointer-events: all;
+}
+.product-slideshow-media__buttons-wrapper {
+  overflow: hidden;
+}
+.product-slideshow-media__buttons-wrapper--padding {
+  padding-bottom: 0.3rem;
+}
+.product-slideshow-media__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  z-index: 2;
+  background-color: rgb(var(--color-overlay));
+  opacity: var(--slide-overlay);
+  transition: opacity var(--duration-default);
+}
+.product-slideshow-media__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  z-index: 1;
+}
+.product-slideshow-media__img svg,
+.product-slideshow-media__img img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.product-slideshow-media__img.have-overlay::before {
+  background: var(--slide-overlay);
+}
+.product-slideshow-media__img.image-slider-placeholder svg {
+  fill: rgba(var(--color-foreground), 0.6);
+}
+.product-slideshow-media [data-animate] {
+  opacity: 0;
+  transition: all var(--duration-long) ease-out;
+}
+.product-slideshow-media [data-animate=bottom] {
+  transform: translate3d(0, 15px, 0);
+}
+
+.product-slideshow-item {
+  width: 31.3rem;
+  margin: 0;
+  overflow: visible;
+  height: max-content;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  position: relative;
+  max-width: 100%;
+}
+.product-slideshow-item__container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.product-slideshow-item__wrapper {
+  width: 31.3rem;
+  max-width: calc(100% - 4rem);
+  position: absolute;
+  left: 2rem;
+  bottom: 3rem;
+}
+.section-full-screen .product-slideshow-item__wrapper {
+  left: 0;
+}
+@media screen and (min-width: 990px) {
+  .product-slideshow-item__wrapper {
+    left: unset;
+    right: 4rem;
+    bottom: 4rem;
+  }
+  .section-full-screen .product-slideshow-item__wrapper {
+    left: unset;
+    right: 0;
+  }
+  [dir=rtl] .product-slideshow-item__wrapper {
+    left: 4rem;
+    right: unset;
+  }
+}
+.product-slideshow-item__slide {
+  background: unset !important;
+  position: relative;
+  z-index: 2;
+  height: max-content;
+}
+.product-slideshow-item__slide:not(:first-child) {
+  transform: translate3d(70%, 0, 0) scale(0.92);
+  z-index: 1;
+}
+.product-slideshow-item__slide:nth-child(3) {
+  transform: translate3d(142%, 0, 0) scale(0.84);
+  z-index: -1;
+}
+.product-slideshow-item__slide.swiper-slide-active {
+  filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.16));
+}
+.product-slideshow-item__slide.swiper-slide-active + .swiper-slide-next {
+  filter: drop-shadow(0px 10px 20px rgba(0, 0, 0, 0.16));
+}
+.swiper-slide-next + .product-slideshow-item__slide {
+  filter: drop-shadow(0px 10px 10px rgba(0, 0, 0, 0.16));
+}
+.product-slideshow-item__controls {
+  width: 17.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  pointer-events: all;
+  position: static;
+}
+@media screen and (min-width: 990px) {
+  .product-slideshow-item__controls {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}
+.product-slideshow-item__controls .swiper-pagination {
+  position: static !important;
+  width: max-content;
+}
+.product-slideshow-item__controls .swiper-buttons {
+  display: none;
+}
+@media screen and (min-width: 990px) {
+  .product-slideshow-item__controls .swiper-buttons {
+    display: flex;
+    align-items: center;
+  }
+}

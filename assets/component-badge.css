@@ -1,0 +1,16 @@
+/* Pill SALE có icon */
+.badge--sale, .card__badge .badge {
+  background: linear-gradient(90deg,#1C4153);
+  color: #fff;
+  border-radius: 400px;
+  padding: 6px 12px;
+  font-weight: 800;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.badge--sale::before {
+  font-size: 12px;
+  line-height: 1;
+}

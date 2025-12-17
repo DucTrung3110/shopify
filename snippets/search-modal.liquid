@@ -1,0 +1,31 @@
+{% for block in blocks %}
+  {% if block.type == 'search_promo' and block.settings.enable_search_promo %}
+    <div class="search__modal">
+      <div class="search__container container">
+        <div class="search__inner">
+          {% if block.settings.search_menu != blank %}
+            {%
+              render 'promo-menu',
+              heading: block.settings.search_menu_heading,
+              menu: block.settings.search_menu,
+            %}
+          {% endif %}
+
+          {% if block.settings.show_search_block %}
+            {% render 'promo-block',
+              color_scheme: block.settings.search_block_color_scheme,
+              overlay_opacity: block.settings.search_block_overlay_opacity,
+              image: block.settings.search_block_image,
+              subheading: block.settings.search_block_subheading,
+              heading: block.settings.search_block_heading,
+              desc: block.settings.search_block_desc,
+              button_label: block.settings.search_block_button_label,
+              button_link: block.settings.search_block_button_link,
+              full_link: block.settings.search_block_full_link
+            %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endfor %}

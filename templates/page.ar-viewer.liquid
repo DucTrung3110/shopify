@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AR Viewer - {{ shop.name }}</title>
+  
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+    }
+    
+    .ar-viewer-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .ar-viewer-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      flex-shrink: 0;
+    }
+    
+    .ar-viewer-back {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #333;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    
+    .ar-viewer-back svg {
+      width: 20px;
+      height: 20px;
+    }
+    
+    .ar-viewer-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      text-align: center;
+      flex: 1;
+      padding: 0 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    
+    .ar-viewer-model {
+      flex: 1;
+      width: 100%;
+      background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+    }
+    
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      --poster-color: transparent;
+    }
+    
+    .ar-viewer-footer {
+      padding: 16px;
+      background: #fff;
+      border-top: 1px solid #eee;
+      flex-shrink: 0;
+    }
+    
+    .ar-viewer-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 24px;
+      background: linear-gradient(135deg, #00c851 0%, #007E33 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0, 200, 81, 0.3);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .ar-viewer-button:active {
+      transform: scale(0.98);
+    }
+    
+    .ar-viewer-button svg {
+      width: 24px;
+      height: 24px;
+    }
+    
+    .ar-viewer-button:disabled {
+      background: #ccc;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    
+    .ar-viewer-hint {
+      text-align: center;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #666;
+    }
+    
+    .ar-viewer-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .ar-viewer-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #e0e0e0;
+      border-top-color: #00c851;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    .ar-viewer-loading-text {
+      font-size: 14px;
+      color: #666;
+    }
+    
+    .ar-not-supported {
+      padding: 20px;
+      text-align: center;
+      background: #fff3cd;
+      border-radius: 8px;
+      margin: 16px;
+    }
+    
+    .ar-not-supported h3 {
+      color: #856404;
+      margin-bottom: 8px;
+    }
+    
+    .ar-not-supported p {
+      color: #856404;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="ar-viewer-container">
+    <header class="ar-viewer-header">
+      <a href="javascript:history.back()" class="ar-viewer-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M19 12H5"/>
+          <path d="M12 19l-7-7 7-7"/>
+        </svg>
+        Quay lại
+      </a>
+      <h1 class="ar-viewer-title" id="product-title">Đang tải...</h1>
+      <div style="width: 70px;"></div>
+    </header>
+    
+    <div class="ar-viewer-model">
+      <model-viewer 
+        id="ar-model"
+        alt="3D Product Model"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        ar-scale="fixed"
+        ar-placement="floor"
+        camera-controls
+        touch-action="pan-y"
+        auto-rotate
+        rotation-per-second="30deg"
+        shadow-intensity="1"
+        shadow-softness="0.5"
+        exposure="1"
+        environment-image="neutral"
+        camera-orbit="45deg 75deg 2.5m"
+        min-camera-orbit="auto auto 0.5m"
+        max-camera-orbit="auto auto 10m"
+        field-of-view="30deg"
+        xr-environment>
+        
+        <div class="ar-viewer-loading" id="loading">
+          <div class="ar-viewer-spinner"></div>
+          <span class="ar-viewer-loading-text">Đang tải model 3D...</span>
+        </div>
+      </model-viewer>
+    </div>
+    
+    <footer class="ar-viewer-footer">
+      <button class="ar-viewer-button" id="ar-button" disabled>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 3L2 8l10 5 10-5-10-5z"/>
+          <path d="M2 16l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        <span id="ar-button-text">Đang tải...</span>
+      </button>
+      <p class="ar-viewer-hint" id="ar-hint"></p>
+    </footer>
+  </div>
+  
+  <script>
+    const modelViewer = document.getElementById('ar-model');
+    const arButton = document.getElementById('ar-button');
+    const arButtonText = document.getElementById('ar-button-text');
+    const arHint = document.getElementById('ar-hint');
+    const productTitle = document.getElementById('product-title');
+    const loadingEl = document.getElementById('loading');
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const productHandle = urlParams.get('product');
+    const modelUrl = urlParams.get('model');
+    
+    if (modelUrl) {
+      modelViewer.src = modelUrl;
+    }
+    
+    if (productHandle) {
+      productTitle.textContent = productHandle.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
+    
+    modelViewer.addEventListener('load', () => {
+      loadingEl.style.display = 'none';
+      checkARSupport();
+    });
+    
+    modelViewer.addEventListener('error', (e) => {
+      loadingEl.innerHTML = '<p style="color: #dc3545;">Không thể tải model 3D</p>';
+    });
+    
+    function checkARSupport() {
+      setTimeout(() => {
+        if (modelViewer.canActivateAR) {
+          arButton.disabled = false;
+          arButtonText.textContent = 'Xem trong không gian của bạn';
+          arHint.textContent = 'Hướng camera vào sàn nhà để đặt sản phẩm';
+        } else {
+          arButton.disabled = true;
+          arButtonText.textContent = 'AR không được hỗ trợ';
+          arHint.textContent = 'Thiết bị của bạn không hỗ trợ AR. Bạn vẫn có thể xem model 3D ở trên.';
+        }
+      }, 500);
+    }
+    
+    arButton.addEventListener('click', () => {
+      if (modelViewer.canActivateAR) {
+        modelViewer.activateAR();
+      }
+    });
+    
+    checkARSupport();
+  </script>
+</body>
+</html>

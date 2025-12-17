@@ -1,0 +1,328 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  {% render 'section-margin' %}
+{%- endstyle -%}
+
+<div
+  class="customer login{% if section.settings.image != blank %} color-background-3{% endif %}"
+  {% if section.settings.header_overlay and section.settings.image != blank %}
+    data-header-overlay="true"
+  {% endif %}
+>
+  <div
+    class="login__wrapper"
+    style="--opacity-overlay: {{section.settings.overlay_opacity}}"
+  >
+    {% if section.settings.image != blank %}
+      {% if section.settings.overlay_enable != blank %}
+        <div class="login__overlay"></div>
+      {% endif %}
+      <div class="login__image">
+        {{
+          section.settings.image
+          | image_url: width: section.settings.image.width
+          | image_tag:
+            loading: 'lazy',
+            sizes: '100vw',
+            widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+        }}
+      </div>
+    {% endif %}
+    <div class="container login__container">
+      <div class="login__col color-background-1{% if section.settings.image == blank %} login__col--without-image{% endif %}">
+        <div class="login__reset" id="recover">
+          <div class="page-header">
+            <div class="page-header__inner">
+              <h2 class="title--page login__title" tabindex="-1">
+                {{ 'customer.recover_password.title' | t }}
+              </h2>
+              <p>{{ 'customer.recover_password.subtext' | t }}</p>
+            </div>
+          </div>
+          <div>
+            {%- form 'recover_customer_password' -%}
+              {% assign recover_success = form.posted_successfully? %}
+              <div class="field">
+                <input
+                  type="email"
+                  value=""
+                  name="email"
+                  id="RecoverEmail"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  autocomplete="email"
+                  {% if form.errors %}
+                    aria-invalid="true"
+                    aria-describedby="RecoverEmail-email-error"
+                    autofocus
+                  {% endif %}
+                  placeholder="example@email.com"
+                >
+                <label for="RecoverEmail">
+                  {{- 'customer.login_page.email' | t -}}
+                </label>
+              </div>
+
+              <div class="login__buttons">
+                <button
+                  class="button button--primary button--primary-size login__sign-in focus-inset"
+                  data-button-text="{{ 'customer.login_page.submit' | t }}"
+                >
+                  <span>{{ 'customer.login_page.submit' | t }}</span>
+                </button>
+
+                <a
+                  class="button button--tertiary button--primary-size login__sign-in anchor focus-inset"
+                  href="#login"
+                >
+                  <span>{{ 'customer.login_page.cancel' | t }}</span>
+                </a>
+              </div>
+            {%- endform -%}
+          </div>
+        </div>
+
+        <div class="login__form" id="login">
+          <div class="page-header">
+            <div class="page-header__inner">
+              <h1 class="title--page login__title h2" tabindex="-1">
+                {{ 'customer.login_page.welcome' | t }}
+              </h1>
+              {% if section.settings.text != blank %}
+                <div class="page-header__text richtext__content">
+                  {{ section.settings.text }}
+                </div>
+              {% endif %}
+              {%- if recover_success == true -%}
+                <h3 class="form__message" tabindex="-1" autofocus>
+                  {{ 'customer.recover_password.success' | t }}
+                </h3>
+              {%- endif -%}
+            </div>
+          </div>
+          {%- form 'customer_login', novalidate: 'novalidate' -%}
+            <div class="field login__field">
+              <input
+                type="email"
+                name="customer[email]"
+                class="field__input"
+                id="CustomerEmail"
+                autocomplete="email"
+                autocorrect="off"
+                autocapitalize="off"
+                required
+                {% if form.errors contains 'form' %}
+                  aria-invalid="true"
+                  aria-describedby="LoginForm-email-error"
+                {% endif %}
+                placeholder="example@email.com"
+              >
+              <label for="CustomerEmail">
+                {{- 'customer.login_page.email' | t -}}
+              </label>
+            </div>
+            {% unless template.name == 'register' %}
+              {{ form.errors | default_errors }}
+            {% endunless %}
+
+            {%- if form.password_needed -%}
+              <div class="field field--pass login__field">
+                <div class="button-pass-visibility">
+                  {% render 'icon-eye' %}
+                  {% render 'icon-eye-close' %}
+                </div>
+                <input
+                  type="password"
+                  value=""
+                  name="customer[password]"
+                  class="field__input"
+                  id="CustomerPassword"
+                  autocomplete="current-password"
+                  {% if form.errors contains 'form' %}
+                    aria-invalid="true"
+                  {% endif %}
+                  required
+                  placeholder="{{ 'customer.login_page.password_placeholder' | t }}"
+                >
+                <label for="CustomerPassword">
+                  {{- 'customer.login_page.password' | t -}}
+                </label>
+              </div>
+              {% unless template.name == 'register' %}
+                {{ form.errors | default_errors }}
+              {% endunless %}
+              <a
+                href="#recover"
+                class="anchor button button--tertiary button--small login__forgot-password focus-inset"
+              >
+                <span>{{ 'customer.login_page.forgot_password' | t }}</span>
+              </a>
+            {%- endif -%}
+
+            <div class="login__buttons">
+              <button
+                class="button button--primary button--primary-size login__sign-in focus-inset"
+                data-button-text="{{ 'customer.login_page.title' | t }}"
+              >
+                <span>{{ 'customer.login_page.title' | t }}</span>
+              </button>
+            </div>
+          {%- endform -%}
+        </div>
+
+        {%- if shop.checkout.guest_login -%}
+          <div class="login__guest">
+            <div class="login__title">
+              {{ 'customer.login_page.guest_title' | t }}
+            </div>
+
+            {%- form 'guest_login' -%}
+              <button
+                class="button button--primary button--primary-size focus-inset"
+                data-button-text="{{ 'customer.login_page.guest_continue' | t }}"
+              >
+                <span>{{ 'customer.login_page.guest_continue' | t }}</span>
+              </button>
+            {%- endform -%}
+          </div>
+        {%- endif -%}
+      </div>
+      <div class="login__create-acc">
+        <span>{{ 'customer.login_page.new_customer' | t }}</span>
+        <a
+          href="{{ routes.account_register_url }}"
+          class="button button--simple button--primary-size focus-inset"
+        >
+          <span>{{ 'customer.login_page.create_account' | t }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.onload = () => {
+    typeof PasswordViewer !== 'undefined' && new PasswordViewer();
+  };
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-login.name",
+  "tag": "section",
+  "class": "spaced-section login-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "header_overlay",
+      "label": "t:sections.all.header_overlay.label",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.main-login.settings.background_image.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.overlay.header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "overlay_enable",
+      "default": true,
+      "label": "t:sections.all.overlay.overlay_enable.label",
+      "info": "t:sections.all.overlay.overlay_enable.info"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.2,
+      "label": "t:sections.all.overlay.overlay_opacity.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_options.header.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "default": "Some Text",
+      "label": "t:sections.all.text.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.section-margin.header.content"
+    },
+    {
+      "type": "select",
+      "id": "margin_top",
+      "options": [
+        {
+          "value": "no-indent",
+          "label": "t:sections.all.section-margin.options__1.label"
+        },
+        {
+          "value": "xs",
+          "label": "t:sections.all.section-margin.options__2.label"
+        },
+        {
+          "value": "s",
+          "label": "t:sections.all.section-margin.options__3.label"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.all.section-margin.options__4.label"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.all.section-margin.options__5.label"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.all.section-margin.options__6.label"
+        }
+      ],
+      "default": "no-indent",
+      "label": "t:sections.all.section-margin.margin_top.label"
+    },
+    {
+      "type": "select",
+      "id": "margin_bottom",
+      "options": [
+        {
+          "value": "no-indent",
+          "label": "t:sections.all.section-margin.options__1.label"
+        },
+        {
+          "value": "xs",
+          "label": "t:sections.all.section-margin.options__2.label"
+        },
+        {
+          "value": "s",
+          "label": "t:sections.all.section-margin.options__3.label"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.all.section-margin.options__4.label"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.all.section-margin.options__5.label"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.all.section-margin.options__6.label"
+        }
+      ],
+      "default": "no-indent",
+      "label": "t:sections.all.section-margin.margin_bottom.label"
+    }
+  ]
+}
+{% endschema %}
+

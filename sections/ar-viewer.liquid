@@ -1,0 +1,345 @@
+{% comment %}
+  AR Viewer Section
+  
+  This section displays a 3D model viewer with AR capabilities.
+  It reads the model URL from the query parameter and displays it.
+  
+  Usage: Create a page with template "ar-viewer" and access it via:
+  /pages/ar-viewer?model={encoded_model_url}&title={product_title}
+{% endcomment %}
+
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+<style>
+  .ar-viewer-section {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 20px;
+  }
+  
+  .ar-viewer-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .ar-viewer-title {
+    color: white;
+    text-align: center;
+    margin-bottom: 8px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .ar-viewer-subtitle {
+    color: rgba(255,255,255,0.7);
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  
+  .ar-viewer-card {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  
+  .ar-viewer-card model-viewer {
+    width: 100%;
+    height: 450px;
+    background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 100%);
+    --poster-color: transparent;
+  }
+  
+  .ar-viewer-card model-viewer::part(default-ar-button) {
+    display: none;
+  }
+  
+  .ar-viewer-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #00c851 0%, #007E33 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 16px 32px;
+    font-size: 17px;
+    font-weight: 600;
+    color: white;
+    cursor: pointer;
+    width: calc(100% - 32px);
+    margin: 16px;
+    box-shadow: 0 4px 15px rgba(0, 200, 81, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .ar-viewer-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 200, 81, 0.5);
+  }
+  
+  .ar-viewer-button:active {
+    transform: scale(0.98);
+  }
+  
+  .ar-viewer-button svg {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .ar-viewer-info {
+    padding: 20px;
+    border-top: 1px solid #eee;
+  }
+  
+  .ar-viewer-product-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+  }
+  
+  .ar-viewer-desc {
+    color: #555;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .ar-viewer-status {
+    margin-top: 12px;
+  }
+  
+  .ar-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  
+  .ar-status-badge.supported {
+    background: #d4edda;
+    color: #155724;
+  }
+  
+  .ar-status-badge.not-supported {
+    background: #fff3cd;
+    color: #856404;
+  }
+  
+  .ar-viewer-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.9);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.3s;
+  }
+  
+  .ar-viewer-loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  
+  .ar-viewer-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e0e0e0;
+    border-top-color: #00c851;
+    border-radius: 50%;
+    animation: ar-spin 1s linear infinite;
+  }
+  
+  @keyframes ar-spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .ar-viewer-loading-text {
+    margin-top: 16px;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .ar-viewer-progress {
+    width: 200px;
+    height: 4px;
+    background: #e0e0e0;
+    border-radius: 2px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  
+  .ar-viewer-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00c851, #007E33);
+    width: 0%;
+    transition: width 0.3s;
+  }
+  
+  .ar-viewer-error {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+  }
+  
+  .ar-viewer-error h2 {
+    color: #333;
+    margin-bottom: 10px;
+  }
+</style>
+
+<div class="ar-viewer-section">
+  <div class="ar-viewer-container">
+    <h1 class="ar-viewer-title" id="ar-title">Loading...</h1>
+    <p class="ar-viewer-subtitle">Xem sản phẩm trong không gian của bạn</p>
+    
+    <div class="ar-viewer-card">
+      <div id="model-container" style="position: relative; display: none;">
+        <model-viewer 
+          id="ar-model-viewer"
+          alt="3D Product Model"
+          ar
+          ar-modes="webxr scene-viewer quick-look"
+          ar-scale="fixed"
+          ar-placement="floor"
+          camera-controls
+          touch-action="pan-y"
+          auto-rotate
+          rotation-per-second="30deg"
+          shadow-intensity="1"
+          shadow-softness="0.5"
+          exposure="1"
+          environment-image="neutral"
+          camera-orbit="45deg 75deg 2.5m"
+          min-camera-orbit="auto auto 1m"
+          max-camera-orbit="auto auto 5m"
+          field-of-view="30deg"
+          interpolation-decay="200"
+          xr-environment>
+          
+          <div class="ar-viewer-loading" id="loading-overlay">
+            <div class="ar-viewer-spinner"></div>
+            <div class="ar-viewer-loading-text">Đang tải model 3D...</div>
+            <div class="ar-viewer-progress">
+              <div class="ar-viewer-progress-fill" id="progress-fill"></div>
+            </div>
+          </div>
+        </model-viewer>
+      </div>
+      
+      <div id="error-container" class="ar-viewer-error" style="display: none;">
+        <h2>Không thể tải model</h2>
+        <p>Vui lòng kiểm tra lại đường link hoặc quét lại mã QR.</p>
+      </div>
+      
+      <button class="ar-viewer-button" id="ar-activate-button" style="display: none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 18.5l-7-4v-5l7-4 7 4v5l-7 4z"/>
+          <path d="M12 13.5l7-4"/>
+          <path d="M12 13.5v5"/>
+          <path d="M12 13.5l-7-4"/>
+          <circle cx="12" cy="5" r="2"/>
+        </svg>
+        Xem trong không gian của bạn
+      </button>
+      
+      <div class="ar-viewer-info">
+        <div class="ar-viewer-product-title" id="product-title">Sản phẩm 3D</div>
+        <div class="ar-viewer-desc">
+          Xoay model bằng cách kéo. Zoom bằng 2 ngón tay. Nhấn nút AR để đặt sản phẩm vào phòng của bạn.
+        </div>
+        <div class="ar-viewer-status" id="ar-status"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const modelUrl = urlParams.get('model');
+  const productTitle = urlParams.get('title') || 'Sản phẩm 3D';
+  const autoAR = urlParams.get('ar') === 'true';
+  
+  const titleEl = document.getElementById('ar-title');
+  const productTitleEl = document.getElementById('product-title');
+  const modelContainer = document.getElementById('model-container');
+  const errorContainer = document.getElementById('error-container');
+  const modelViewer = document.getElementById('ar-model-viewer');
+  const arButton = document.getElementById('ar-activate-button');
+  const statusDiv = document.getElementById('ar-status');
+  const loadingOverlay = document.getElementById('loading-overlay');
+  const progressFill = document.getElementById('progress-fill');
+  
+  titleEl.textContent = decodeURIComponent(productTitle);
+  productTitleEl.textContent = decodeURIComponent(productTitle);
+  
+  if (!modelUrl) {
+    errorContainer.style.display = 'block';
+    titleEl.textContent = 'Lỗi';
+    return;
+  }
+  
+  const decodedModelUrl = decodeURIComponent(modelUrl);
+  modelViewer.setAttribute('src', decodedModelUrl);
+  modelContainer.style.display = 'block';
+  
+  modelViewer.addEventListener('progress', function(event) {
+    const progress = Math.round(event.detail.totalProgress * 100);
+    progressFill.style.width = progress + '%';
+  });
+  
+  modelViewer.addEventListener('load', function() {
+    loadingOverlay.classList.add('hidden');
+    checkARSupport();
+    
+    if (autoAR && modelViewer.canActivateAR) {
+      setTimeout(function() {
+        modelViewer.activateAR();
+      }, 500);
+    }
+  });
+  
+  modelViewer.addEventListener('error', function() {
+    modelContainer.style.display = 'none';
+    errorContainer.style.display = 'block';
+    titleEl.textContent = 'Lỗi tải model';
+  });
+  
+  function checkARSupport() {
+    setTimeout(function() {
+      if (modelViewer.canActivateAR) {
+        arButton.style.display = 'flex';
+        statusDiv.innerHTML = '<div class="ar-status-badge supported"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Thiết bị hỗ trợ AR</div>';
+      } else {
+        statusDiv.innerHTML = '<div class="ar-status-badge not-supported"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg> Mở trên điện thoại để dùng AR</div>';
+      }
+    }, 500);
+  }
+  
+  arButton.addEventListener('click', function() {
+    modelViewer.activateAR();
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "AR Viewer",
+  "settings": [],
+  "presets": [
+    {
+      "name": "AR Viewer"
+    }
+  ]
+}
+{% endschema %}

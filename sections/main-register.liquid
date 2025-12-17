@@ -1,0 +1,356 @@
+{{ 'customer.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  {% render 'section-margin' %}
+{%- endstyle -%}
+
+<script src="{{ 'input.js' | asset_url }}" defer="defer"></script>
+
+<div
+  class="customer login register{% if section.settings.image != blank %} color-background-3{% endif %}"
+  {% if section.settings.header_overlay and section.settings.image != blank %}
+    data-header-overlay="true"
+  {% endif %}
+>
+  <div
+    class="login__wrapper"
+    style="--opacity-overlay: {{section.settings.overlay_opacity}}"
+  >
+    {% if section.settings.image != blank %}
+      {% if section.settings.overlay_enable != blank %}
+        <div class="login__overlay"></div>
+      {% endif %}
+      <div class="login__image">
+        {{
+          section.settings.image.preview_image
+          | image_url: width: 3840
+          | image_tag:
+            loading: 'lazy',
+            sizes: '100vw',
+            widths: '375, 550, 750, 1100, 1500, 1780, 2000, 3000, 3840'
+        }}
+      </div>
+    {% endif %}
+    <div class="container login__container">
+      <div class="login__col color-background-1{% if section.settings.image == blank %} login__col--without-image{% endif %}">
+        <div class="login__form">
+          <div class="page-header">
+            <div class="page-header__inner">
+              <h1 class="title--page login__title h2">
+                {{ 'customer.register.title' | t }}
+              </h1>
+              {% if section.settings.text != blank %}
+                <div class="page-header__text richtext__content">
+                  {{ section.settings.text }}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+          {%- form 'create_customer', novalidate: 'novalidate' -%}
+            <div class="login__form-row">
+              <div class="field">
+                <input
+                  type="text"
+                  name="customer[first_name]"
+                  id="RegisterForm-FirstName"
+                  {% if form.first_name %}
+                    value="{{ form.first_name }}"
+                  {% endif %}
+                  autocomplete="given-name"
+                  aria-required="true"
+                  {% if form.errors contains 'first_name' %}
+                    aria-invalid="true"
+                    aria-describedby="RegisterForm-FirstName-error"
+                  {% endif %}
+                  placeholder="{{ 'customer.register.first_name_placeholder' | t }}"
+                  required
+                >
+                <label for="RegisterForm-FirstName">
+                  {{- 'customer.register.first_name' | t -}}
+                </label>
+                {%- if form.errors contains 'first_name' -%}
+                  <span id="RegisterForm-FirstName-error" class="form__message">
+                    {{ form.errors.translated_fields.first_name | capitalize }}
+                    {{ form.errors.messages.first_name }}.
+                  </span>
+                {%- endif -%}
+              </div>
+              <div class="field">
+                <input
+                  type="text"
+                  name="customer[last_name]"
+                  id="RegisterForm-LastName"
+                  {% if form.last_name %}
+                    value="{{ form.last_name }}"
+                  {% endif %}
+                  autocomplete="family-name"
+                  aria-required="true"
+                  {% if form.errors contains 'last_name' %}
+                    aria-invalid="true"
+                    aria-describedby="RegisterForm-LastName-error"
+                  {% endif %}
+                  placeholder="{{ 'customer.register.last_name_placeholder' | t }}"
+                  required
+                >
+                <label for="RegisterForm-LastName">
+                  {{- 'customer.register.last_name' | t -}}
+                </label>
+                {%- if form.errors contains 'last_name' -%}
+                  <span id="RegisterForm-LastName-error" class="form__message">
+                    {{ form.errors.translated_fields.last_name | capitalize }}
+                    {{ form.errors.messages.last_name }}.
+                  </span>
+                {%- endif -%}
+              </div>
+            </div>
+            <div class="field">
+              <input
+                type="email"
+                name="customer[email]"
+                id="RegisterForm-email"
+                {% if form.email %}
+                  value="{{ form.email }}"
+                {% endif %}
+                spellcheck="false"
+                autocapitalize="off"
+                autocomplete="email"
+                aria-required="true"
+                {% if form.errors contains 'email' %}
+                  aria-invalid="true"
+                  aria-describedby="RegisterForm-email-error"
+                {% endif %}
+                placeholder="example@email.com"
+                required
+              >
+              <label for="RegisterForm-email">
+                {{- 'customer.register.email' | t -}}
+              </label>
+            </div>
+            {%- if form.errors contains 'email' -%}
+              <span id="RegisterForm-email-error" class="form__message">
+                {{ form.errors.translated_fields.email | capitalize }}
+                {{ form.errors.messages.email }}.
+              </span>
+            {%- endif -%}
+            <div class="field field--pass">
+              <div class="button-pass-visibility">
+                {% render 'icon-eye' %}
+                {% render 'icon-eye-close' %}
+              </div>
+              <input
+                type="password"
+                name="customer[password]"
+                id="RegisterForm-password"
+                aria-required="true"
+                {% if form.errors contains 'password' %}
+                  aria-invalid="true"
+                  aria-describedby="RegisterForm-password-error"
+                {% endif %}
+                required
+                placeholder="{{ 'customer.login_page.password_placeholder' | t }}"
+              >
+              <label for="RegisterForm-password">
+                {{- 'customer.register.password' | t -}}
+              </label>
+            </div>
+            {%- if form.errors contains 'password' -%}
+              <span id="RegisterForm-password-error" class="form__message">
+                {{ form.errors.translated_fields.password | capitalize }}
+                {{ form.errors.messages.password }}.
+              </span>
+            {%- endif -%}
+
+            {%- if form.errors contains 'form' -%}
+              <span id="RegisterForm-email-error" class="form__message">
+                {{ 'customer.login_page.customer_exist' | t }}
+              </span>
+            {%- endif -%}
+
+            <div class="field field--checkbox">
+              <input
+                type="checkbox"
+                name="terms"
+                value="true"
+                id="Terms"
+                required
+              >
+              <label for="Terms">
+                <svg width="20" height="20" class="icon icon-checkmark" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8.70186 13.3334L5.55566 10.1872L6.18626 9.55663L8.70186 12.0722L14.1073 6.66675L14.7379 7.29733L8.70186 13.3334Z" fill="currentColor" stroke="currentColor" stroke-width="0.5"/>
+                </svg>
+                <span>
+                  {{ 'customer.register.terms' | t }}
+                  <a href="{{ shop.terms_of_service.url }}" target="_blank">
+                    {{- 'customer.register.terms_link' | t -}}
+                  </a>
+                </span>
+              </label>
+            </div>
+
+            <span
+              id="RegisterForm-terms-error"
+              class="form__message register__message-terms"
+            >
+              {{ 'customer.register.terms_error' | t }}
+            </span>
+
+            <div class="login__buttons login__buttons--space-between">
+              <button
+                id="RegisterSubmit"
+                class="button button--primary button--primary-size register__create-acc focus-inset"
+                data-button-text="{{ 'customer.register.submit' | t }}"
+              >
+                <span>{{ 'customer.register.submit' | t }}</span>
+              </button>
+            </div>
+          {%- endform -%}
+        </div>
+      </div>
+      <div class="login__create-acc">
+        <span>{{ 'customer.register.have_account' | t }}</span>
+        <a
+          href="{{ routes.account_login_url }}"
+          class="button button--simple button--primary-size focus-inset"
+        >
+          <span>{{ 'customer.login_page.title' | t }}</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.onload = () => {
+    typeof PasswordViewer !== 'undefined' && new PasswordViewer();
+
+    $('body').on('click', '#RegisterSubmit', function (e) {
+      if ($('#Terms').is(':checked')) {
+        $('#RegisterForm-terms-error').css('display', 'none');
+      } else {
+        $('#RegisterForm-terms-error').css('display', 'block');
+        e.preventDefault();
+        return false;
+      }
+    });
+  };
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.main-register.name",
+  "tag": "section",
+  "class": "spaced-section login-section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "header_overlay",
+      "label": "t:sections.all.header_overlay.label",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.main-register.settings.background_image.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.overlay.header.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "overlay_enable",
+      "default": true,
+      "label": "t:sections.all.overlay.overlay_enable.label",
+      "info": "t:sections.all.overlay.overlay_enable.info"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.2,
+      "label": "t:sections.all.overlay.overlay_opacity.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.content_options.header.content"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "default": "t:sections.main-register.settings.text.default",
+      "label": "t:sections.all.text.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.section-margin.header.content"
+    },
+    {
+      "type": "select",
+      "id": "margin_top",
+      "options": [
+        {
+          "value": "no-indent",
+          "label": "t:sections.all.section-margin.options__1.label"
+        },
+        {
+          "value": "xs",
+          "label": "t:sections.all.section-margin.options__2.label"
+        },
+        {
+          "value": "s",
+          "label": "t:sections.all.section-margin.options__3.label"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.all.section-margin.options__4.label"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.all.section-margin.options__5.label"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.all.section-margin.options__6.label"
+        }
+      ],
+      "default": "no-indent",
+      "label": "t:sections.all.section-margin.margin_top.label"
+    },
+    {
+      "type": "select",
+      "id": "margin_bottom",
+      "options": [
+        {
+          "value": "no-indent",
+          "label": "t:sections.all.section-margin.options__1.label"
+        },
+        {
+          "value": "xs",
+          "label": "t:sections.all.section-margin.options__2.label"
+        },
+        {
+          "value": "s",
+          "label": "t:sections.all.section-margin.options__3.label"
+        },
+        {
+          "value": "m",
+          "label": "t:sections.all.section-margin.options__4.label"
+        },
+        {
+          "value": "l",
+          "label": "t:sections.all.section-margin.options__5.label"
+        },
+        {
+          "value": "xl",
+          "label": "t:sections.all.section-margin.options__6.label"
+        }
+      ],
+      "default": "no-indent",
+      "label": "t:sections.all.section-margin.margin_bottom.label"
+    }
+  ]
+}
+{% endschema %}
+

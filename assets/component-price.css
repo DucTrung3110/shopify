@@ -1,0 +1,144 @@
+.price-wrapper {
+  margin-top: 1.6rem;
+}
+
+.price {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: rgb(var(--color-card-price-new));
+  font-weight: 700;
+  width: 100%;
+}
+.price-item--regular {
+  color: rgb(var(--color-card-price-new));
+}
+.price-item--sale {
+  color: rgb(var(--color-card-price-new));
+}
+.price--on-sale .price-item--regular {
+  text-decoration: line-through;
+  text-underline-offset: -0.4rem;
+  color: rgb(var(--color-card-price-old));
+  text-decoration-color: rgb(var(--color-card-price-old));
+}
+.price--on-sale .price__sale {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  column-gap: 0.4rem;
+}
+.card-information__group--center .price--on-sale .price__sale {
+  text-align: center;
+  justify-content: center;
+}
+.card-information__group--left .price--on-sale .price__sale {
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.price.price--unavailable {
+  visibility: hidden;
+}
+
+.price dl {
+  margin: 0;
+  display: flex;
+  width: 100%;
+}
+.card-information__group--center .price dl {
+  text-align: center;
+  justify-content: center;
+}
+.card-information__group--left .price dl {
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.price dd {
+  margin: 0;
+}
+
+.price .price__last:last-of-type {
+  margin: 0;
+}
+
+@media screen and (min-width: 750px) {
+  .price {
+    margin-bottom: 0;
+  }
+}
+.price--product {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+@media screen and (min-width: 750px) {
+  .price--product {
+    font-size: 2rem;
+  }
+}
+
+.price--sold-out .price__availability,
+.price__regular {
+  display: block;
+}
+
+.price__sale,
+.price__availability,
+.price--on-sale .price__regular,
+.price--on-sale .price__availability,
+.price--no-compare .price__compare {
+  display: none;
+}
+
+.price__sale dd {
+  display: flex;
+}
+.card-information__group--center .price__sale dd {
+  text-align: center;
+  justify-content: center;
+}
+.card-information__group--left .price__sale dd {
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.price__regular dd {
+  width: 100%;
+  display: block;
+}
+.card-information__group--center .price__regular dd {
+  text-align: center;
+  justify-content: center;
+}
+.card-information__group--left .price__regular dd {
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.unit-price {
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  margin-top: 0.2rem;
+  text-transform: uppercase;
+  color: rgb(var(--color-card-price-old));
+}
+
+.price--slider dl {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+.price--slider span {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+[dir=rtl] .price--slider span {
+  text-align: right;
+}

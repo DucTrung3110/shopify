@@ -1,0 +1,62 @@
+{% for block in blocks %}
+  {% assign mega_menu_trigger = block.settings.mega_menu_trigger
+    | handle
+    | strip
+  %}
+  {% if link.handle == mega_menu_trigger %}
+    {% if block.settings.menu_1 != blank
+      or block.settings.menu_2 != blank
+      or block.settings.show_promo_block_1
+      or block.settings.show_promo_block_2
+    %}
+      <div class="mega-menu__items container">
+        {% if block.settings.menu_1 != blank %}
+          {%
+            render 'promo-menu',
+            heading: block.settings.menu_1_heading,
+            menu: block.settings.menu_1,
+          %}
+        {% endif %}
+
+        {% if block.settings.menu_2 != blank %}
+          {%
+            render 'promo-menu',
+            heading: block.settings.menu_2_heading,
+            menu: block.settings.menu_2,
+          %}
+        {% endif %}
+
+        <div class="mega-menu__promo-blocks">
+          {% if block.settings.show_promo_block_1 %}
+            {% render 'promo-block',
+              color_scheme: block.settings.color_scheme_1,
+              overlay_opacity: block.settings.overlay_opacity_1,
+              image: block.settings.image_1,
+              subheading: block.settings.subheading_1,
+              heading: block.settings.heading_1,
+              desc: block.settings.desc_1,
+              button_label: block.settings.button_label_1,
+              button_link: block.settings.button_link_1,
+              full_link: block.settings.full_link_1
+            %}
+          {% endif %}
+
+          {% if block.settings.show_promo_block_2 %}
+            {%
+              render 'promo-block',
+              color_scheme: block.settings.color_scheme_2,
+              overlay_opacity: block.settings.overlay_opacity_2,
+              image: block.settings.image_2,
+              subheading: block.settings.subheading_2,
+              heading: block.settings.heading_2,
+              desc: block.settings.desc_2,
+              button_label: block.settings.button_label_2,
+              button_link: block.settings.button_link_2,
+              full_link: block.settings.full_link_2
+            %}
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endfor %}

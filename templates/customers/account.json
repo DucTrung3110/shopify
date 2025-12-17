@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-account",
+      "settings": {}
+    },
+    "popular-products": {
+      "type": "popular-products",
+      "settings": {
+        "margin_top": "m",
+        "margin_bottom": "m"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "color_scheme": "background-1"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "popular-products",
+    "newsletter"
+  ]
+}

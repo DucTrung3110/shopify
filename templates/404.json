@@ -1,0 +1,27 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-404",
+      "settings": {
+        "margin_top": "no-indent",
+        "margin_bottom": "no-indent"
+      }
+    },
+    "popular-products": {
+      "type": "popular-products",
+      "settings": {
+        "margin_top": "m",
+        "margin_bottom": "no-indent"
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "color_scheme": "background-1",
+        "margin_top": "m",
+        "margin_bottom": "no-indent"
+      }
+    }
+  },
+  "order": ["main", "popular-products", "newsletter"]
+}
