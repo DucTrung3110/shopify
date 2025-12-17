@@ -33,12 +33,13 @@ This is a Shopify theme with a professional AR "View in Your Space" feature impl
 - Responsive design (350px mobile / 500px desktop)
 
 ### Integration
-Add to any product template where you want AR:
+AR viewer is now **automatically integrated** into `sections/main-product.liquid`. 
+It will display below the product gallery whenever a product has a 3D model uploaded.
+
+For manual integration elsewhere:
 ```liquid
 {% render 'ar-model-viewer', product: product %}
 ```
-
-See `sections/main-product.liquid` for detailed integration instructions.
 
 ## Development
 The theme browser (server.js) allows browsing theme files in Replit. The actual theme requires uploading to Shopify to function.

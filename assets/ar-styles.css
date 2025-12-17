@@ -1,3 +1,8 @@
+.product__ar-viewer-wrapper {
+  margin-top: 16px;
+  width: 100%;
+}
+
 .ar-viewer-container {
   position: relative;
   width: 100%;
